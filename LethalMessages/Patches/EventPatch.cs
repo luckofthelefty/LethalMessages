@@ -1,0 +1,83 @@
+using com.github.luckofthelefty.LethalMessages.Messages;
+using GameNetcodeStuff;
+using HarmonyLib;
+
+namespace com.github.luckofthelefty.LethalMessages.Patches;
+
+internal static class EventPatch
+{
+    // --- Tier 2: Critical Damage ---
+    [HarmonyPatch(typeof(PlayerControllerB), nameof(PlayerControllerB.DamagePlayerClientRpc))]
+    [HarmonyPostfix]
+    private static void DamagePlayer(PlayerControllerB __instance, int damageNumber)
+    {
+        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!ConfigManager.CriticalDamageMessages.Value) return;
+        if (__instance == null || __instance.isPlayerDead) return;
+
+        // "Critical" = health drops to 20 or below
+        if (__instance.health > 20) return;
+
+        string playerName = __instance.playerUsername ?? "Unknown";
+        string message = EventMessages.GetCriticalDamage(playerName);
+        MessageSender.Send(message, MessageTier.Event);
+    }
+
+    // --- Tier 2: Ship Leaving ---
+    [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.ShipLeaveAutomatically))]
+    [HarmonyPostfix]
+    private static void ShipLeaving()
+    {
+        if (!ConfigManager.ShipLeavingMessages.Value) return;
+
+        string message = EventMessages.GetShipLeaving();
+        MessageSender.Send(message, MessageTier.Event);
+    }
+
+    // --- Tier 2: Vote to Leave ---
+    [HarmonyPatch(typeof(TimeOfDay), nameof(TimeOfDay.VoteShipToLeaveEarly))]
+    [HarmonyPostfix]
+    private static void VoteToLeave()
+    {
+        if (!ConfigManager.VoteToLeaveMessages.Value) return;
+
+        string message = EventMessages.GetVoteToLeave();
+        MessageSender.Send(message, MessageTier.Event);
+    }
+
+    // --- Tier 2: Teleporter ---
+    [HarmonyPatch(typeof(ShipTeleporter), nameof(ShipTeleporter.PressTeleportButtonClientRpc))]
+    [HarmonyPostfix]
+    private static void TeleporterUsed(ShipTeleporter __instance)
+    {
+        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!ConfigManager.TeleporterMessages.Value) return;
+
+        string message = EventMessages.GetTeleporter(__instance.isInverseTeleporter);
+        MessageSender.Send(message, MessageTier.Event);
+    }
+
+    // --- Tier 3b: Emote ---
+    [HarmonyPatch(typeof(PlayerControllerB), nameof(PlayerControllerB.PerformEmote))]
+    [HarmonyPostfix]
+    private static void PlayerEmote(PlayerControllerB __instance)
+    {
+        if (!ConfigManager.EmoteMessages.Value) return;
+        if (__instance == null) return;
+
+        string playerName = __instance.playerUsername ?? "Unknown";
+        string message = EventMessages.GetEmote(playerName);
+        MessageSender.Send(message, MessageTier.Event);
+    }
+
+    // --- Tier 3b: Quota Fulfilled ---
+    [HarmonyPatch(typeof(TimeOfDay), nameof(TimeOfDay.SyncNewProfitQuotaClientRpc))]
+    [HarmonyPostfix]
+    private static void QuotaFulfilled()
+    {
+        if (!ConfigManager.QuotaFulfilledMessages.Value) return;
+
+        string message = EventMessages.GetQuotaFulfilled();
+        MessageSender.Send(message, MessageTier.Event);
+    }
+}
