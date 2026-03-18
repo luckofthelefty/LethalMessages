@@ -7,7 +7,7 @@ internal static class EventMessages
 {
     private static readonly Random _rng = new Random();
 
-    // Tier 2 — Situational
+    // Player Events
     private static readonly List<string> CriticalDamage = new List<string>
     {
         "$$ is critically injured!",
@@ -18,6 +18,7 @@ internal static class EventMessages
         "$$ is clinging to life!"
     };
 
+    // Ship Events
     private static readonly List<string> ShipLeaving = new List<string>
     {
         "The ship is leaving! Run!",
@@ -58,17 +59,6 @@ internal static class EventMessages
         "Inverse teleporter! Destination: probably death."
     };
 
-    // Tier 3b — Fun
-    private static readonly List<string> Emote = new List<string>
-    {
-        "$$ is dancing. In a facility. With monsters.",
-        "$$ just hit the griddy on company time.",
-        "$$ is emoting instead of working. Classic.",
-        "$$'s morale is... surprisingly high.",
-        "$$ is vibing. The Company disapproves.",
-        "$$ broke into dance. Priorities, people."
-    };
-
     private static readonly List<string> QuotaFulfilled = new List<string>
     {
         "Quota met! The Company is pleased... for now.",
@@ -79,7 +69,7 @@ internal static class EventMessages
         "The shareholders are satisfied. Temporarily."
     };
 
-    // Tier 3a — Facility
+    // Monster Encounters
     private static readonly List<string> TurretFiring = new List<string>
     {
         "Turret locked on! Take cover!",
@@ -103,9 +93,6 @@ internal static class EventMessages
         isInverse
             ? InverseTeleporter[_rng.Next(InverseTeleporter.Count)]
             : Teleporter[_rng.Next(Teleporter.Count)];
-
-    internal static string GetEmote(string username) =>
-        Emote[_rng.Next(Emote.Count)].Replace("$$", username);
 
     internal static string GetQuotaFulfilled() =>
         QuotaFulfilled[_rng.Next(QuotaFulfilled.Count)];

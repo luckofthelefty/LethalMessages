@@ -37,7 +37,7 @@ internal static class MonsterEncounterPatch
     {
         if (!ConfigManager.MonsterEncounterMessages.Value) return false;
         if (enemy == null) return false;
-        if (!NetworkUtils.IsClientRpcExecution(enemy)) return false;
+        if (!NetworkUtils.ShouldProcess($"encounter_{enemy.GetInstanceID()}")) return false;
 
         var netObj = enemy.GetComponent<NetworkObject>();
         if (netObj == null) return false;
@@ -260,31 +260,39 @@ internal static class MonsterEncounterPatch
     // --- Barber (Clay Surgeon) approaching ---
     [HarmonyPatch(typeof(ClaySurgeonAI), nameof(ClaySurgeonAI.KillPlayerClientRpc))]
     [HarmonyPostfix]
-    private static void BarberEncounter(ClaySurgeonAI __instance, int playerId)
+    private static void BarberEncounter(ClaySurgeonAI __instance)
     {
-        if (!CanSendEncounter(__instance)) return;
-        SendEncounter(__instance, GetPlayerName(playerId));
-    }
-
-    // --- Maneater (Cave Dweller) ---
-    [HarmonyPatch(typeof(CaveDwellerAI), nameof(CaveDwellerAI.SwitchToBehaviourClientRpc))]
-    [HarmonyPostfix]
-    private static void ManeaterEncounter(CaveDwellerAI __instance, int stateIndex)
-    {
-        if (stateIndex < 1) return;
         if (!CanSendEncounter(__instance)) return;
         SendEncounter(__instance, GetTargetPlayerName(__instance));
     }
 
-    // --- Hoarding Bug aggro ---
-    [HarmonyPatch(typeof(HoarderBugAI), nameof(HoarderBugAI.SwitchToBehaviourClientRpc))]
+    // --- Behaviour state changes (Maneater, Hoarding Bug, Bees, Mask Hornets) ---
+    // SwitchToBehaviourClientRpc is defined on EnemyAI base class, not overridden by subclasses,
+    // so we must patch the base class and check instance type.
+    [HarmonyPatch(typeof(EnemyAI), nameof(EnemyAI.SwitchToBehaviourClientRpc))]
     [HarmonyPostfix]
-    private static void HoarderBugEncounter(HoarderBugAI __instance, int stateIndex)
+    private static void BehaviourStateEncounter(EnemyAI __instance, int stateIndex)
     {
-        // State 2 = aggressive/chasing
-        if (stateIndex < 2) return;
-        if (!CanSendEncounter(__instance)) return;
-        SendEncounter(__instance, GetTargetPlayerName(__instance));
+        if (__instance is CaveDwellerAI && stateIndex >= 1)
+        {
+            if (!CanSendEncounter(__instance)) return;
+            SendEncounter(__instance, GetTargetPlayerName(__instance));
+        }
+        else if (__instance is HoarderBugAI && stateIndex >= 2)
+        {
+            if (!CanSendEncounter(__instance)) return;
+            SendEncounter(__instance, GetTargetPlayerName(__instance));
+        }
+        else if (__instance is RedLocustBees && stateIndex >= 1)
+        {
+            if (!CanSendEncounter(__instance)) return;
+            SendEncounter(__instance, GetTargetPlayerName(__instance));
+        }
+        else if (__instance is ButlerBeesEnemyAI && stateIndex >= 1)
+        {
+            if (!CanSendEncounter(__instance)) return;
+            SendEncounter(__instance, GetTargetPlayerName(__instance));
+        }
     }
 
     // --- Earth Leviathan emerge ---
@@ -314,32 +322,12 @@ internal static class MonsterEncounterPatch
         SendEncounter(__instance, GetTargetPlayerName(__instance));
     }
 
-    // --- Circuit Bees aggro ---
-    [HarmonyPatch(typeof(RedLocustBees), nameof(RedLocustBees.SwitchToBehaviourClientRpc))]
-    [HarmonyPostfix]
-    private static void CircuitBeesEncounter(RedLocustBees __instance, int stateIndex)
-    {
-        if (stateIndex < 1) return;
-        if (!CanSendEncounter(__instance)) return;
-        SendEncounter(__instance, GetTargetPlayerName(__instance));
-    }
-
-    // --- Mask Hornets (Butler Bees) aggro ---
-    [HarmonyPatch(typeof(ButlerBeesEnemyAI), nameof(ButlerBeesEnemyAI.SwitchToBehaviourClientRpc))]
-    [HarmonyPostfix]
-    private static void MaskHornetsEncounter(ButlerBeesEnemyAI __instance, int stateIndex)
-    {
-        if (stateIndex < 1) return;
-        if (!CanSendEncounter(__instance)) return;
-        SendEncounter(__instance, GetTargetPlayerName(__instance));
-    }
-
     // --- Turret firing ---
     [HarmonyPatch(typeof(Turret), nameof(Turret.SetToModeClientRpc))]
     [HarmonyPostfix]
     private static void TurretMode(Turret __instance, int mode)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"turret_{__instance.GetInstanceID()}")) return;
         if (!ConfigManager.MonsterEncounterMessages.Value) return;
 
         // Only send on Firing (2) or Berserk (3) modes

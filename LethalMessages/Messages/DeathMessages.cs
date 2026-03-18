@@ -15,7 +15,7 @@ internal static class DeathMessages
         "$$ spontaneously stopped living.",
         "The Company sends its condolences to $$'s family.",
         "$$ died of mysterious circumstances. Totally not suspicious.",
-        "$$ ragdolled into the void.",
+        "$$ died and nobody saw it happen.",
         "$$ was claimed by the moon itself."
     };
 
@@ -24,7 +24,7 @@ internal static class DeathMessages
         "$$ got absolutely rocked.",
         "$$'s skull made an interesting sound.",
         "$$ caught something heavy with their face.",
-        "$$ found out objects in motion stay in motion.",
+        "$$ was bludgeoned into next week.",
         "$$ was on the wrong end of blunt force trauma.",
         "$$ brought a face to a blunt object fight.",
         "$$'s head was used as a stress ball.",
@@ -39,18 +39,19 @@ internal static class DeathMessages
         "$$ tested gravity. Gravity won.",
         "$$ left a $$ shaped crater.",
         "$$ believed they could fly. They were wrong.",
-        "$$ speedran the floor.",
+        "$$ hit the ground at terminal velocity.",
         "$$ took the express elevator down.",
-        "$$ discovered that fall damage is real."
+        "$$ discovered that fall damage is real.",
+        "$$ speedran the gravity simulator."
     };
 
     private static readonly List<string> Blast = new List<string>
     {
-        "$$ was redistributed across the facility.",
+        "$$ was blown to bits across the facility.",
         "$$ went out with a bang. Literally.",
-        "$$'s atoms are now in several zip codes.",
+        "$$ was scattered across several zip codes.",
         "$$ became confetti.",
-        "$$ learned about rapid unplanned disassembly.",
+        "$$ stepped on a mine and exploded. Spectacularly.",
         "$$ found the landmine. With their feet.",
         "$$ is now a fine mist.",
         "$$ was vaporized. At least it was quick."
@@ -64,16 +65,17 @@ internal static class DeathMessages
         "$$ was choked out like a UFC fighter.",
         "Something really wanted $$ to shut up.",
         "$$'s airway was permanently closed for business.",
-        "$$ received a complimentary neck compression.",
-        "$$ was throttled into the afterlife."
+        "$$ received a complimentary neck massage.",
+        "$$ was strangled into the afterlife."
     };
 
     private static readonly List<string> Suffocation = new List<string>
     {
         "$$ ran out of oxygen. Classic mistake.",
-        "$$'s lungs filed for bankruptcy.",
-        "$$ tried to breathe. Couldn't relate.",
+        "$$'s lungs gave out. No air left.",
+        "$$ tried to breathe and couldn't.",
         "$$ found out air is actually important.",
+        "Air was evicted from $$'s lungs.",
         "$$'s last breath was... their last breath.",
         "$$ suffocated. Should've brought a spare lung.",
         "$$ forgot that breathing is not optional.",
@@ -87,8 +89,8 @@ internal static class DeathMessages
         "$$ was torn apart like wrapping paper.",
         "$$ became an all-you-can-eat buffet.",
         "Something used $$ as a chew toy.",
-        "$$ was violently disassembled.",
-        "$$'s organs are now exterior decorations.",
+        "$$ was ferociously disassembled, limb from limb.",
+        "$$'s insides are now on the outside.",
         "$$ found out they're made of meat. The hard way."
     };
 
@@ -98,7 +100,7 @@ internal static class DeathMessages
         "$$ now has more holes than swiss cheese.",
         "$$ caught a bullet. With their everything.",
         "$$ was shot. Who gave these things guns?!",
-        "$$ got ventilated.",
+        "$$ now has more holes than they started with.",
         "$$ found out they weren't bulletproof.",
         "$$ was used for target practice.",
         "$$ learned that bullets are not friends."
@@ -110,7 +112,7 @@ internal static class DeathMessages
         "$$ was compacted for easy storage.",
         "$$ found out they're not load-bearing.",
         "$$ was crushed like a soda can.",
-        "$$ experienced extreme compression.",
+        "$$ was crushed flat. Very flat.",
         "$$ is now a pancake.",
         "$$'s bones were turned into gravel.",
         "$$ was flattened. Permanently."
@@ -148,8 +150,8 @@ internal static class DeathMessages
         "$$ was deep fried.",
         "$$ got a shocking surprise.",
         "$$ conducted electricity. Poorly.",
-        "$$'s nervous system got a factory reset.",
-        "$$ was zapped into the shadow realm."
+        "$$'s entire body just short-circuited.",
+        "$$ was electrocuted into the shadow realm."
     };
 
     private static readonly List<string> Kicking = new List<string>
@@ -161,7 +163,7 @@ internal static class DeathMessages
         "$$ found out legs are weapons too.",
         "Somebody dropkicked $$ into orbit.",
         "$$ was on the receiving end of a boot.",
-        "$$ was yeeted by foot."
+        "$$ was kicked so hard they ragdolled."
     };
 
     private static readonly List<string> Burning = new List<string>

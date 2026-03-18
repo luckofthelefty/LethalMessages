@@ -1,24 +1,27 @@
-using System.Reflection;
+using System.Collections.Generic;
 using Unity.Netcode;
 
 namespace com.github.luckofthelefty.LethalMessages;
 
 internal static class NetworkUtils
 {
-    // Cached reflection for __rpc_exec_stage (internal field in NetworkBehaviour)
-    private static readonly FieldInfo _rpcExecStageField =
-        typeof(NetworkBehaviour).GetField("__rpc_exec_stage", BindingFlags.Instance | BindingFlags.NonPublic);
+    // Frame-based deduplication to prevent duplicate events on the host.
+    // On the host, ClientRpc methods fire twice per call. This ensures
+    // we only process each unique event once per frame.
+    private static readonly Dictionary<string, int> _lastProcessedFrame = new Dictionary<string, int>();
 
     /// <summary>
-    /// Returns true if a ClientRpc is in the actual client execution stage.
-    /// On the host, ClientRpc methods are called twice — this prevents duplicate events.
+    /// Returns true the first time a given event key is seen in a frame.
+    /// Returns false on subsequent calls with the same key in the same frame.
+    /// Use this in ClientRpc postfixes to prevent duplicate events on the host.
     /// </summary>
-    public static bool IsClientRpcExecution(NetworkBehaviour instance)
+    public static bool ShouldProcess(string eventKey)
     {
-        if (instance == null || _rpcExecStageField == null) return true;
+        int frame = UnityEngine.Time.frameCount;
+        if (_lastProcessedFrame.TryGetValue(eventKey, out int lastFrame) && lastFrame == frame)
+            return false;
 
-        // __RpcExecStage: None = 0, Server = 1, Client = 2
-        int stage = (int)_rpcExecStageField.GetValue(instance);
-        return stage == 2; // Client
+        _lastProcessedFrame[eventKey] = frame;
+        return true;
     }
 }

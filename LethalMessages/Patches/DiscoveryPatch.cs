@@ -15,7 +15,7 @@ internal static class DiscoveryPatch
     private static void EnemyBehaviorChanged(EnemyAI __instance, int stateIndex)
     {
         if (__instance == null) return;
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"discovery_{__instance.GetInstanceID()}_{stateIndex}")) return;
 
         var netObj = __instance.GetComponent<NetworkObject>();
         if (netObj == null) return;

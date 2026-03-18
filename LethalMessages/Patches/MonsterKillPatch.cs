@@ -94,8 +94,11 @@ internal static class MonsterKillPatch
     // --- Barber (Clay Surgeon) ---
     [HarmonyPatch(typeof(ClaySurgeonAI), nameof(ClaySurgeonAI.KillPlayerClientRpc))]
     [HarmonyPostfix]
-    private static void BarberKill(int playerId)
+    private static void BarberKill(ClaySurgeonAI __instance)
     {
+        var player = __instance.targetPlayer;
+        if (player == null) return;
+        int playerId = (int)player.playerClientId;
         RegisterMonsterKill(playerId, "ClaySurgeon");
     }
 
