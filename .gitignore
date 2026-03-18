@@ -16,6 +16,10 @@ obj/
 ## NuGet
 packages/
 
+## Thunderstore
+thunderstore/build/
+thunderstore/*.zip
+
 ## OS
 Thumbs.db
 Desktop.ini

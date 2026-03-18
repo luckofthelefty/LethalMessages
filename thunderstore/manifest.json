@@ -1,0 +1,9 @@
+{
+    "name": "LethalMessages",
+    "version_number": "1.0.0",
+    "website_url": "https://github.com/luckofthelefty/LethalMessages",
+    "description": "Funny randomized in-game chat messages for deaths, monster encounters, and game events.",
+    "dependencies": [
+        "BepInEx-BepInExPack-5.4.2100"
+    ]
+}
