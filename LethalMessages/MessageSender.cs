@@ -22,4 +22,15 @@ internal static class MessageSender
         string color = tier == MessageTier.Death ? DeathColor : EventColor;
         HUDManager.Instance.AddTextToChatOnServer($"<color={color}>{message}</color>");
     }
+
+    /// <summary>
+    /// Sends a chat message directly, bypassing the host/server check. Used by DebugTester.
+    /// </summary>
+    internal static void SendDirect(string message, MessageTier tier = MessageTier.Death)
+    {
+        if (HUDManager.Instance == null) return;
+
+        string color = tier == MessageTier.Death ? DeathColor : EventColor;
+        HUDManager.Instance.AddTextToChatOnServer($"<color={color}>{message}</color>");
+    }
 }

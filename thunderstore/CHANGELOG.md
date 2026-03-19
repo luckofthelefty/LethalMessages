@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0
+
+- Added debug test mode (F5-F8 keys, enable via config)
+- Added StaticNetcodeLib dependency for standalone compatibility
+
 ## 1.0.0
 
 - Initial release

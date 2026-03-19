@@ -10,6 +10,7 @@ internal class Plugin : BaseUnityPlugin
     private readonly Harmony _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
 
     internal static Plugin Instance { get; private set; }
+    internal static BepInEx.Logging.ManualLogSource Log => Instance.Logger;
 
     #pragma warning disable IDE0051
     private void Awake()
@@ -34,5 +35,8 @@ internal class Plugin : BaseUnityPlugin
 
         // Chat display
         _harmony.PatchAll(typeof(ChatFadePatch));
+
+        // Debug tester
+        gameObject.AddComponent<DebugTester>();
     }
 }

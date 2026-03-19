@@ -9,6 +9,9 @@ internal static class ConfigManager
     // General
     internal static ConfigEntry<float> ChatMessageDuration { get; private set; }
 
+    // Debug
+    internal static ConfigEntry<bool> EnableTestMode { get; private set; }
+
     // Player Events
     internal static ConfigEntry<bool> CriticalDamageMessages { get; private set; }
 
@@ -51,6 +54,11 @@ internal static class ConfigManager
         ChatMessageDuration = config.Bind(
             "General", "ChatMessageDuration", 6f,
             "How long chat messages stay visible before fading out, in seconds. The game default is ~4 seconds. Set to 4 or below to use default behavior.");
+
+        // Debug
+        EnableTestMode = config.Bind(
+            "Debug", "EnableTestMode", false,
+            "Enable test mode. F5=Death, F6=Monster Kill, F7=Monster Encounter, F8=Events.");
 
         // Player Events
         CriticalDamageMessages = config.Bind(
